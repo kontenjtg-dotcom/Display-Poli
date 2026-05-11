@@ -16,35 +16,35 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background-color: var(--bg);
-            padding: 8px;
+            padding: 5px;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Mencegah scroll agar pas screenshot */
+            overflow: hidden; 
         }
 
         header {
             text-align: center;
-            padding-bottom: 8px;
+            padding-bottom: 5px;
             flex-shrink: 0;
             border-bottom: 1px solid #eee;
         }
 
-        h2 { font-size: 1rem; color: #333; margin-bottom: 8px; }
+        h2 { font-size: 0.95rem; color: #333; margin-bottom: 5px; }
 
         .controls {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 8px;
+            gap: 6px;
+            margin-bottom: 6px;
         }
 
         .btn {
-            padding: 6px 12px;
+            padding: 5px 10px;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             color: white;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
@@ -52,24 +52,23 @@
         .btn-buka { background-color: var(--buka); }
         .btn-tutup { background-color: var(--tutup); }
 
-        /* Container Grid 2 Kolom */
         .grid-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-auto-rows: min-content;
-            gap: 4px;
+            gap: 3px;
             flex-grow: 1;
         }
 
         .card {
             background: #fdfdfd;
-            padding: 4px 6px;
+            padding: 3px 5px;
             border-radius: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid #eee;
-            border-left: 4px solid var(--tutup);
+            border-left: 3px solid var(--tutup);
         }
 
         .card.is-buka { 
@@ -78,19 +77,26 @@
         }
 
         .name { 
-            font-size: 0.62rem; /* Ukuran font dioptimalkan agar tidak terpotong */
+            font-size: 0.58rem; 
             font-weight: 700; 
             color: #444;
             line-height: 1.1;
-            padding-right: 4px;
+            padding-right: 2px;
+            max-width: 65%;
         }
 
-        /* Toggle Mini */
+        .switch-group {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            min-width: 55px;
+        }
+
         .switch {
             position: relative;
             display: inline-block;
-            width: 32px;
-            height: 18px;
+            width: 28px;
+            height: 16px;
             flex-shrink: 0;
         }
 
@@ -102,13 +108,13 @@
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: #ddd;
             transition: .2s;
-            border-radius: 18px;
+            border-radius: 16px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 14px; width: 14px;
+            height: 12px; width: 12px;
             left: 2px; bottom: 2px;
             background-color: white;
             transition: .2s;
@@ -116,13 +122,14 @@
         }
 
         input:checked + .slider { background-color: var(--buka); }
-        input:checked + .slider:before { transform: translateX(14px); }
+        input:checked + .slider:before { transform: translateX(12px); }
 
         .status-label {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 800;
-            margin-right: 4px;
+            margin-right: 3px;
             color: var(--tutup);
+            text-align: right;
         }
 
         input:checked ~ .status-label { color: var(--buka); }
@@ -138,8 +145,7 @@
         </div>
     </header>
 
-    <div class="grid-container" id="main-list">
-        </div>
+    <div class="grid-container" id="main-list"></div>
 
     <script>
         const daftarPoli = [
@@ -160,8 +166,8 @@
             div.id = `card-${i}`;
             div.innerHTML = `
                 <div class="name">${poli}</div>
-                <div style="display:flex; align-items:center">
-                    <span class="status-label" id="text-${i}">OFF</span>
+                <div class="switch-group">
+                    <span class="status-label" id="text-${i}">TUTUP</span>
                     <label class="switch">
                         <input type="checkbox" class="poli-checkbox" id="check-${i}" onchange="togglePoli(${i}, this)">
                         <span class="slider"></span>
@@ -173,13 +179,13 @@
 
         function togglePoli(id, el) {
             const card = document.getElementById(`card-${id}`);
-            const txt = document.getElementById(`text-${i = id}`);
+            const txt = document.getElementById(`text-${id}`);
             if(el.checked) {
                 card.classList.add('is-buka');
-                txt.innerText = "ON";
+                txt.innerText = "BUKA";
             } else {
                 card.classList.remove('is-buka');
-                txt.innerText = "OFF";
+                txt.innerText = "TUTUP";
             }
         }
 
