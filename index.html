@@ -11,84 +11,87 @@
             --bg: #ffffff;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background-color: var(--bg);
-            padding: 5px;
+            padding: 8px;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Menghilangkan scroll agar pas satu layar */
+            overflow: hidden; /* Mencegah scroll agar pas screenshot */
         }
 
         header {
             text-align: center;
-            padding: 5px 0;
-            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
             flex-shrink: 0;
+            border-bottom: 1px solid #eee;
         }
 
-        h2 { font-size: 1rem; margin-bottom: 5px; }
+        h2 { font-size: 1rem; color: #333; margin-bottom: 8px; }
 
-        /* Tombol Bulk Action */
         .controls {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 8px;
         }
 
         .btn {
-            padding: 5px 12px;
+            padding: 6px 12px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             color: white;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: bold;
             cursor: pointer;
+            text-transform: uppercase;
         }
         .btn-buka { background-color: var(--buka); }
         .btn-tutup { background-color: var(--tutup); }
 
-        /* Grid 2 Kolom agar muat banyak */
+        /* Container Grid 2 Kolom */
         .grid-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            grid-auto-rows: min-content;
             gap: 4px;
             flex-grow: 1;
         }
 
         .card {
-            background: #f9f9f9;
-            padding: 4px 8px;
+            background: #fdfdfd;
+            padding: 4px 6px;
             border-radius: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-left: 3px solid var(--tutup);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            border-left: 4px solid var(--tutup);
         }
 
-        .card.is-buka { border-left-color: var(--buka); background: #f0fff4; }
+        .card.is-buka { 
+            border-left-color: var(--buka); 
+            background: #f0fff4; 
+        }
 
         .name { 
-            font-size: 0.65rem; /* Font kecil agar muat 2 kolom */
-            font-weight: 600; 
-            color: #333;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 70px;
+            font-size: 0.62rem; /* Ukuran font dioptimalkan agar tidak terpotong */
+            font-weight: 700; 
+            color: #444;
+            line-height: 1.1;
+            padding-right: 4px;
         }
 
-        /* Switch Mini */
+        /* Toggle Mini */
         .switch {
             position: relative;
             display: inline-block;
-            width: 30px;
-            height: 16px;
+            width: 32px;
+            height: 18px;
+            flex-shrink: 0;
         }
 
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -97,15 +100,15 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
+            background-color: #ddd;
             transition: .2s;
-            border-radius: 16px;
+            border-radius: 18px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 12px; width: 12px;
+            height: 14px; width: 14px;
             left: 2px; bottom: 2px;
             background-color: white;
             transition: .2s;
@@ -116,8 +119,8 @@
         input:checked + .slider:before { transform: translateX(14px); }
 
         .status-label {
-            font-size: 0.6rem;
-            font-weight: bold;
+            font-size: 0.55rem;
+            font-weight: 800;
             margin-right: 4px;
             color: var(--tutup);
         }
@@ -128,28 +131,29 @@
 <body>
 
     <header>
-        <h2>Status Operasional Poli</h2>
+        <h2>Monitoring Status Poli</h2>
         <div class="controls">
-            <button class="btn btn-buka" onclick="bulkToggle(true)">BUKA SEMUA</button>
-            <button class="btn btn-tutup" onclick="bulkToggle(false)">TUTUP SEMUA</button>
+            <button class="btn btn-buka" onclick="bulkToggle(true)">Buka Semua</button>
+            <button class="btn btn-tutup" onclick="bulkToggle(false)">Tutup Semua</button>
         </div>
     </header>
 
-    <div class="grid-container" id="main-list"></div>
+    <div class="grid-container" id="main-list">
+        </div>
 
     <script>
         const daftarPoli = [
-            "Usia Dewasa", "Lanjut Usia", "Sekolah/Remaja",
-            "Balita/PraSek", "Layanan Gigi", "Ibu Hamil",
-            "Ibu Nifas", "KB", "IVA", "IMS", "Pelangi", "Metadon",
-            "Imunisasi", "Layanan Sore", "Layanan 24 Jam", "Tindakan",
-            "R. Bersalin", "MCU", "Kes. Haji", "TB (DOTS)",
-            "Layanan Gizi", "Keswa", "Kespro Catin", "EKG", "Psikologi"
+            "Kesehatan Usia Dewasa", "Kesehatan Lanjut Usia", "Usia Sekolah & Remaja",
+            "Balita & Pra Sekolah", "Layanan Gigi", "Kesehatan Ibu Hamil",
+            "Kesehatan Ibu Nifas", "KB (Keluarga Berencana)", "IVA (Deteksi Dini)", 
+            "IMS", "Pelangi", "Metadon / PTRM",
+            "Anak / Imunisasi", "Layanan Sore", "Layanan 24 Jam", "Layanan Tindakan",
+            "Ruang Bersalin", "Medical Check Up", "Kesehatan Haji", "TB (DOTS)",
+            "Layanan Gizi", "Layanan Keswa", "Kespro Catin", "Layanan EKG", "Psikologi"
         ];
 
         const listWrap = document.getElementById('main-list');
 
-        // Render List
         daftarPoli.forEach((poli, i) => {
             const div = document.createElement('div');
             div.className = 'card';
@@ -157,7 +161,7 @@
             div.innerHTML = `
                 <div class="name">${poli}</div>
                 <div style="display:flex; align-items:center">
-                    <span class="status-label" id="text-${i}">TUTUP</span>
+                    <span class="status-label" id="text-${i}">OFF</span>
                     <label class="switch">
                         <input type="checkbox" class="poli-checkbox" id="check-${i}" onchange="togglePoli(${i}, this)">
                         <span class="slider"></span>
@@ -167,20 +171,18 @@
             listWrap.appendChild(div);
         });
 
-        // Toggle Satuan
         function togglePoli(id, el) {
             const card = document.getElementById(`card-${id}`);
-            const txt = document.getElementById(`text-${id}`);
+            const txt = document.getElementById(`text-${i = id}`);
             if(el.checked) {
                 card.classList.add('is-buka');
-                txt.innerText = "BUKA";
+                txt.innerText = "ON";
             } else {
                 card.classList.remove('is-buka');
-                txt.innerText = "TUTUP";
+                txt.innerText = "OFF";
             }
         }
 
-        // Fitur Buka/Tutup Semua
         function bulkToggle(status) {
             const checkboxes = document.querySelectorAll('.poli-checkbox');
             checkboxes.forEach((cb, i) => {
