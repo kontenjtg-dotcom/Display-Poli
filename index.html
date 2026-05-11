@@ -2,96 +2,93 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Status Layanan Poli</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Monitoring Poli</title>
     <style>
         :root {
-            --bg-color: #f0f2f5;
-            --buka: #2ecc71;
-            --tutup: #e74c3c;
-            --text: #2c3e50;
+            --buka: #27ae60;
+            --tutup: #c0392b;
+            --bg: #ffffff;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 10px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            padding: 5px;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            box-sizing: border-box;
+            overflow: hidden; /* Menghilangkan scroll agar pas satu layar */
         }
 
-        .header {
+        header {
             text-align: center;
-            margin-bottom: 10px;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
         }
 
-        h2 {
-            font-size: 1.1rem;
-            margin: 5px 0;
-            color: var(--text);
-        }
+        h2 { font-size: 1rem; margin-bottom: 5px; }
 
-        /* Legend Keterangan Warna */
-        .legend {
+        /* Tombol Bulk Action */
+        .controls {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 4px;
+            color: white;
             font-size: 0.75rem;
             font-weight: bold;
-            margin-bottom: 10px;
+            cursor: pointer;
         }
-        .legend-item { display: flex; align-items: center; gap: 5px; }
-        .box { width: 12px; height: 12px; border-radius: 3px; }
-        .bg-buka { background-color: var(--buka); }
-        .bg-tutup { background-color: var(--tutup); }
+        .btn-buka { background-color: var(--buka); }
+        .btn-tutup { background-color: var(--tutup); }
 
-        .container {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+        /* Grid 2 Kolom agar muat banyak */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            flex-grow: 1;
         }
 
-        .poli-row {
-            background: white;
-            padding: 8px 12px;
-            border-radius: 8px;
+        .card {
+            background: #f9f9f9;
+            padding: 4px 8px;
+            border-radius: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 3px solid var(--tutup);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
-        .poli-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #444;
-            max-width: 60%;
+        .card.is-buka { border-left-color: var(--buka); background: #f0fff4; }
+
+        .name { 
+            font-size: 0.65rem; /* Font kecil agar muat 2 kolom */
+            font-weight: 600; 
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70px;
         }
 
-        .status-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-text {
-            font-size: 0.7rem;
-            font-weight: 800;
-            width: 45px;
-            text-align: right;
-        }
-
-        /* Switch Styling */
+        /* Switch Mini */
         .switch {
             position: relative;
             display: inline-block;
-            width: 44px;
-            height: 22px;
+            width: 30px;
+            height: 16px;
         }
 
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -100,93 +97,97 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--tutup);
-            transition: .3s;
-            border-radius: 22px;
+            background-color: #ccc;
+            transition: .2s;
+            border-radius: 16px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
+            height: 12px; width: 12px;
+            left: 2px; bottom: 2px;
             background-color: white;
-            transition: .3s;
+            transition: .2s;
             border-radius: 50%;
         }
 
         input:checked + .slider { background-color: var(--buka); }
-        input:checked + .slider:before { transform: translateX(22px); }
+        input:checked + .slider:before { transform: translateX(14px); }
 
-        /* Warna teks dinamis */
-        .text-tutup { color: var(--tutup); }
-        .text-buka { color: var(--buka); }
-
-        /* Optimasi layar kecil */
-        @media (max-height: 750px) {
-            .poli-row { padding: 6px 10px; }
-            .poli-name { font-size: 0.8rem; }
+        .status-label {
+            font-size: 0.6rem;
+            font-weight: bold;
+            margin-right: 4px;
+            color: var(--tutup);
         }
+
+        input:checked ~ .status-label { color: var(--buka); }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h2>Status Layanan Poli</h2>
-        <div class="legend">
-            <div class="legend-item"><div class="box bg-buka"></div> HIJAU = BUKA</div>
-            <div class="legend-item"><div class="box bg-tutup"></div> MERAH = TUTUP</div>
+    <header>
+        <h2>Status Operasional Poli</h2>
+        <div class="controls">
+            <button class="btn btn-buka" onclick="bulkToggle(true)">BUKA SEMUA</button>
+            <button class="btn btn-tutup" onclick="bulkToggle(false)">TUTUP SEMUA</button>
         </div>
-    </div>
+    </header>
 
-    <div class="container" id="list-poli">
-        </div>
+    <div class="grid-container" id="main-list"></div>
 
     <script>
-        const dataPoli = [
-            "Kesehatan Usia Dewasa", "Kesehatan Lanjut Usia", "Kesehatan Usia Sekolah & Remaja",
-            "Kesehatan Balita & Pra Sekolah", "Layanan Gigi", "Kesehatan Ibu Hamil",
-            "Kesehatan Ibu Nifas", "KB", "IVA", "IMS", "Pelangi", "Metadon/PTRM",
-            "Kesehatan Anak / Imunisasi", "Layanan Sore", "Layanan 24 jam", "Layanan Tindakan",
-            "Ruang Bersalin", "Medical Check Up", "Kesehatan Haji", "TB (DOTS)",
-            "Layanan Gizi", "Layanan Keswa", "Layanan Kespro Catin", "Layanan EKG", "Psikologi"
+        const daftarPoli = [
+            "Usia Dewasa", "Lanjut Usia", "Sekolah/Remaja",
+            "Balita/PraSek", "Layanan Gigi", "Ibu Hamil",
+            "Ibu Nifas", "KB", "IVA", "IMS", "Pelangi", "Metadon",
+            "Imunisasi", "Layanan Sore", "Layanan 24 Jam", "Tindakan",
+            "R. Bersalin", "MCU", "Kes. Haji", "TB (DOTS)",
+            "Layanan Gizi", "Keswa", "Kespro Catin", "EKG", "Psikologi"
         ];
 
-        const container = document.getElementById('list-poli');
+        const listWrap = document.getElementById('main-list');
 
-        dataPoli.forEach((nama, index) => {
-            const row = document.createElement('div');
-            row.className = 'poli-row';
-            
-            // Default awal adalah Tutup (Checkbox tidak dicentang)
-            row.innerHTML = `
-                <span class="poli-name">${nama}</span>
-                <div class="status-container">
-                    <span class="status-text text-tutup" id="label-${index}">TUTUP</span>
+        // Render List
+        daftarPoli.forEach((poli, i) => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.id = `card-${i}`;
+            div.innerHTML = `
+                <div class="name">${poli}</div>
+                <div style="display:flex; align-items:center">
+                    <span class="status-label" id="text-${i}">TUTUP</span>
                     <label class="switch">
-                        <input type="checkbox" id="check-${index}" onchange="updateStatus(${index})">
+                        <input type="checkbox" class="poli-checkbox" id="check-${i}" onchange="togglePoli(${i}, this)">
                         <span class="slider"></span>
                     </label>
                 </div>
             `;
-            container.appendChild(row);
+            listWrap.appendChild(div);
         });
 
-        function updateStatus(id) {
-            const checkbox = document.getElementById(`check-${id}`);
-            const label = document.getElementById(`label-${id}`);
-            
-            if (checkbox.checked) {
-                label.innerText = "BUKA";
-                label.className = "status-text text-buka";
+        // Toggle Satuan
+        function togglePoli(id, el) {
+            const card = document.getElementById(`card-${id}`);
+            const txt = document.getElementById(`text-${id}`);
+            if(el.checked) {
+                card.classList.add('is-buka');
+                txt.innerText = "BUKA";
             } else {
-                label.innerText = "TUTUP";
-                label.className = "status-text text-tutup";
+                card.classList.remove('is-buka');
+                txt.innerText = "TUTUP";
             }
         }
-    </script>
 
+        // Fitur Buka/Tutup Semua
+        function bulkToggle(status) {
+            const checkboxes = document.querySelectorAll('.poli-checkbox');
+            checkboxes.forEach((cb, i) => {
+                cb.checked = status;
+                togglePoli(i, cb);
+            });
+        }
+    </script>
 </body>
 </html>
